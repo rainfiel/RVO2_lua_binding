@@ -7,9 +7,10 @@ local message = require "ejoy2dx.message"
 local render = require "ejoy2dx.render"
 local border = require "border"
 -- local world = require "world"
-local rvo_world = require "rvo_world"
 
 render:fixed_adapter(500, 500)
+local rvo_world = require "rvo_world"
+
 
 if OS == "WINDOWS" then
 	local keymap = require "ejoy2dx.keymap"
@@ -33,6 +34,7 @@ end
 function game.drawframe()
 	ej.clear(0xFFFFFFFF)
 	render:draw()
+	rvo_world.draw()
 end
 
 function game.touch(what, x, y)

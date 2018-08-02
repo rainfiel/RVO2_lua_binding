@@ -13,6 +13,7 @@ extern "C"{
 
 #include "RVOSimulator.h"
 #include "Vector2.h"
+#include <vector>
 
 static RVO::RVOSimulator *sim = NULL;
 
@@ -84,6 +85,38 @@ _add_agent(lua_State *L) {
 	}
 	lua_pushinteger(L, id);
 	return 1;
+}
+
+static int
+_add_obstacle(lua_State *L) {
+	CHECK_SIM
+
+	int n = lua_gettop(L);
+	if (n % 2 != 0)
+		return luaL_error(L, "add_obstacle args count must be even");
+
+	std::vector<RVO::Vector2> obstacle;
+	for (int i = 0; i < n/2; i++)
+	{
+		float x = lua_tonumber(L, 2 * i + 1);
+		float y = lua_tonumber(L, 2 * i + 2);
+		obstacle.push_back(RVO::Vector2(x, y));
+	}
+
+	int no = sim->addObstacle(obstacle);
+	if (no == RVO::RVO_ERROR)
+		no = -1;
+	lua_pushinteger(L, no);
+
+	return 1;
+}
+
+static int
+_process_obstacle(lua_State *L) {
+	CHECK_SIM
+
+	sim->processObstacles();
+	return 0;
 }
 
 static int
@@ -192,6 +225,8 @@ extern "C" RVO2_API int luaopen_rvo2 (lua_State* L) {
 		{ "time_step", _time_step},
 		{ "default_agent", _default_agent},
 		{ "add_agent", _add_agent},
+		{ "add_obstacle", _add_obstacle},
+		{ "process_obstacle", _process_obstacle},
 		{ "update", _update},
 
 		{ "pre_velocity", _pre_velocity},
