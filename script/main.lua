@@ -6,7 +6,8 @@ local image = require "ejoy2dx.image"
 local message = require "ejoy2dx.message"
 local render = require "ejoy2dx.render"
 local border = require "border"
-local world = require "world"
+-- local world = require "world"
+local rvo_world = require "rvo_world"
 
 render:fixed_adapter(500, 500)
 
@@ -25,7 +26,8 @@ local game = {frame=0}
 
 function game.update()
 	game.frame = game.frame + 1
-	world.update(game.frame)
+	-- world.update(game.frame)
+	rvo_world.update(game.frame)
 end
 
 function game.drawframe()
@@ -35,7 +37,8 @@ end
 
 function game.touch(what, x, y)
 	if what == "END" then
-		world.touch(x, y)
+		-- world.touch(x, y)
+		rvo_world.touch(x, y)
 	end
 end
 

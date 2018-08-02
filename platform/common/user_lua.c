@@ -4,6 +4,9 @@
 //int luaopen_xxx(lua_State* L);
 
 int luaopen_boid(lua_State *L);
+extern "C" {
+int luaopen_rvo2(lua_State *L);
+}
 
 static void
 _register(lua_State *L, lua_CFunction func, const char * libname) {
@@ -13,4 +16,5 @@ _register(lua_State *L, lua_CFunction func, const char * libname) {
 
 void init_user_lua_libs(lua_State *L) {
 	_register(L, luaopen_boid, "ejoy2dx.boid.c");
+	_register(L, luaopen_rvo2, "ejoy2dx.rvo2.c");
 }
