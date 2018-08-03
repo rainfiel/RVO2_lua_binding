@@ -42,6 +42,7 @@ function game.touch(what, x, y)
 		-- world.touch(x, y)
 		rvo_world.touch(x, y)
 	end
+	return true
 end
 
 function game.message(...)

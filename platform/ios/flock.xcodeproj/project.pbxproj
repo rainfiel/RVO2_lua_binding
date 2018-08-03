@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		AE0A17561C0FDC6000D31C04 /* user_lua.c in Sources */ = {isa = PBXBuildFile; fileRef = AE0A17551C0FDC6000D31C04 /* user_lua.c */; };
+		AE7BD85B2113F3C60028C6D8 /* lrvo2.c in Sources */ = {isa = PBXBuildFile; fileRef = AE7BD8512113F3C50028C6D8 /* lrvo2.c */; };
+		AE7BD85C2113F3C60028C6D8 /* Obstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7BD8562113F3C60028C6D8 /* Obstacle.cpp */; };
+		AE7BD85D2113F3C60028C6D8 /* RVOSimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7BD8572113F3C60028C6D8 /* RVOSimulator.cpp */; };
+		AE7BD85E2113F3C60028C6D8 /* KdTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7BD8582113F3C60028C6D8 /* KdTree.cpp */; };
+		AE7BD85F2113F3C60028C6D8 /* Agent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7BD8592113F3C60028C6D8 /* Agent.cpp */; };
 		AE9DE5211A8EF9CD0085776F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DE5201A8EF9CD0085776F /* main.m */; };
 		AE9DE5241A8EF9CD0085776F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DE5231A8EF9CD0085776F /* AppDelegate.m */; };
 		AE9DE5271A8EF9CD0085776F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DE5261A8EF9CD0085776F /* ViewController.m */; };
@@ -57,8 +62,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AE9DE51B1A8EF9CD0085776F /* flock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE0A17551C0FDC6000D31C04 /* user_lua.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = user_lua.c; path = ../../common/user_lua.c; sourceTree = "<group>"; };
+		AE7BD84F2113F3C50028C6D8 /* Agent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Agent.h; path = ../../common/rvo2/Agent.h; sourceTree = "<group>"; };
+		AE7BD8502113F3C50028C6D8 /* KdTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KdTree.h; path = ../../common/rvo2/KdTree.h; sourceTree = "<group>"; };
+		AE7BD8512113F3C50028C6D8 /* lrvo2.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = lrvo2.c; path = ../../common/rvo2/lrvo2.c; sourceTree = "<group>"; };
+		AE7BD8522113F3C50028C6D8 /* Obstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Obstacle.h; path = ../../common/rvo2/Obstacle.h; sourceTree = "<group>"; };
+		AE7BD8532113F3C50028C6D8 /* RVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVO.h; path = ../../common/rvo2/RVO.h; sourceTree = "<group>"; };
+		AE7BD8542113F3C60028C6D8 /* RVOSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVOSimulator.h; path = ../../common/rvo2/RVOSimulator.h; sourceTree = "<group>"; };
+		AE7BD8552113F3C60028C6D8 /* Vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector2.h; path = ../../common/rvo2/Vector2.h; sourceTree = "<group>"; };
+		AE7BD8562113F3C60028C6D8 /* Obstacle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Obstacle.cpp; path = ../../common/rvo2/Obstacle.cpp; sourceTree = "<group>"; };
+		AE7BD8572113F3C60028C6D8 /* RVOSimulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RVOSimulator.cpp; path = ../../common/rvo2/RVOSimulator.cpp; sourceTree = "<group>"; };
+		AE7BD8582113F3C60028C6D8 /* KdTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KdTree.cpp; path = ../../common/rvo2/KdTree.cpp; sourceTree = "<group>"; };
+		AE7BD8592113F3C60028C6D8 /* Agent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Agent.cpp; path = ../../common/rvo2/Agent.cpp; sourceTree = "<group>"; };
+		AE7BD85A2113F3C60028C6D8 /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Definitions.h; path = ../../common/rvo2/Definitions.h; sourceTree = "<group>"; };
+		AE9DE51B1A8EF9CD0085776F /* flock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE9DE51F1A8EF9CD0085776F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE9DE5201A8EF9CD0085776F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AE9DE5221A8EF9CD0085776F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -97,6 +114,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE7BD84C2113F39D0028C6D8 /* rvo2 */ = {
+			isa = PBXGroup;
+			children = (
+				AE7BD8592113F3C60028C6D8 /* Agent.cpp */,
+				AE7BD84F2113F3C50028C6D8 /* Agent.h */,
+				AE7BD85A2113F3C60028C6D8 /* Definitions.h */,
+				AE7BD8582113F3C60028C6D8 /* KdTree.cpp */,
+				AE7BD8502113F3C50028C6D8 /* KdTree.h */,
+				AE7BD8512113F3C50028C6D8 /* lrvo2.c */,
+				AE7BD8562113F3C60028C6D8 /* Obstacle.cpp */,
+				AE7BD8522113F3C50028C6D8 /* Obstacle.h */,
+				AE7BD8532113F3C50028C6D8 /* RVO.h */,
+				AE7BD8572113F3C60028C6D8 /* RVOSimulator.cpp */,
+				AE7BD8542113F3C60028C6D8 /* RVOSimulator.h */,
+				AE7BD8552113F3C60028C6D8 /* Vector2.h */,
+			);
+			name = rvo2;
+			sourceTree = "<group>";
+		};
 		AE9DE5121A8EF9CD0085776F = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +154,7 @@
 		AE9DE51D1A8EF9CD0085776F /* flock */ = {
 			isa = PBXGroup;
 			children = (
+				AE7BD84C2113F39D0028C6D8 /* rvo2 */,
 				AE9DE5741A8EFECE0085776F /* app */,
 				AE9DE51E1A8EF9CD0085776F /* Supporting Files */,
 			);
@@ -299,11 +336,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE7BD85D2113F3C60028C6D8 /* RVOSimulator.cpp in Sources */,
 				AE0A17561C0FDC6000D31C04 /* user_lua.c in Sources */,
+				AE7BD85E2113F3C60028C6D8 /* KdTree.cpp in Sources */,
 				AE9DE5271A8EF9CD0085776F /* ViewController.m in Sources */,
 				AE9DE5241A8EF9CD0085776F /* AppDelegate.m in Sources */,
+				AE7BD85F2113F3C60028C6D8 /* Agent.cpp in Sources */,
+				AE7BD85B2113F3C60028C6D8 /* lrvo2.c in Sources */,
 				AE9DE5211A8EF9CD0085776F /* main.m in Sources */,
 				AE9DE7131AA040EB0085776F /* fw.c in Sources */,
+				AE7BD85C2113F3C60028C6D8 /* Obstacle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
