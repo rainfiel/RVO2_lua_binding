@@ -6,6 +6,7 @@ local rvo2 = require "ejoy2dx.rvo2.c"
 rvo2.new_social()
 rvo2.time_step(1/30)
 rvo2.default_agent(1000, 10, 0.1, 0.1, 10, 18)
+local neighbor_tor = 1
 
 local boid_render = render:create(1002, "boid")
 
@@ -26,21 +27,47 @@ local function bubble_pop(img, cb)
 end
 
 local boids = {}
+local boids_map = {}
 local obstacles = {}
-local function add_boid(x, y, r)
+local colors = {0xAAFF0000, 0xAA00FF00, 0xAA0000FF}
+local function add_boid(x, y, r, type)
 	local inst = rvo2.add_agent(x, y)
 	rvo2.radius(inst, r)
-	rvo2.time_hori(inst, r/500)
+	rvo2.time_hori(inst, type == 0 and r/50000 or r/500)
+	if type == 0 then
+		rvo2.max_neighbors(inst, 20)
+		rvo2.time_hori_obst(inst, r/50000)
+	end
 	-- rvo2.time_hori_obst(inst, 5)
 	local img = new_bubble(nil, r)
 	img:ps(x, y)
+	img.color = colors[type] or 0xFFFFFFFF
 	boid_render:show(img, 0, render.center)
-	return {inst=inst,x=x,y=y,r=r,r2=r*r,img=img}
+	return {type=type,inst=inst,x=x,y=y,r=r,r2=r*r,img=img}
 end
 
 local function rm_boid(inst)
-	rvo2.position(inst, -9999, -9999)
+	rvo2.position(inst, -9999-inst*100, -9999-inst*100)
 	rvo2.max_speed(inst, 0)
+	boids_map[inst] = nil
+end
+
+local function neighbors(boid, check_type, all, cnt)
+	all = all or {}
+	cnt = cnt or 0
+	local num = rvo2.agent_neighbors_num(boid.inst)
+	for k=1, num do
+		local n = rvo2.get_agent_neighbor(boid.inst, k)
+		local nb = boids_map[n]
+		if not all[n] and (not check_type or nb.type == boid.type) then
+			if math.abs(vector2.dist(nb.x, nb.y, boid.x, boid.y) - nb.r - boid.r) <= neighbor_tor then
+				all[n] = nb
+				cnt = cnt + 1
+				all, cnt = neighbors(nb, check_type, all, cnt)
+			end
+		end
+	end
+	return all, cnt
 end
 
 local function add_obstacle(...)
@@ -59,15 +86,14 @@ end
 -- add_obstacle(0, 1.732,  2, -1.732, -2, -1.732)
 -- rvo2.process_obstacle()
 
-local colors = {0xFFFF0000, 0xFF00FF00, 0xFF0000FF}
 for k=1, 250 do
 	local x = math.random(-255, 250)
 	local y = math.random(-255, 255)
 	local r = math.random(5, 10)
-	local b = add_boid(x, y, r)
-	-- b.img.color = colors[b.inst%3 + 1]
+	local b = add_boid(x, y, r, #boids%3+1)
 	rvo2.pre_velocity(b.inst, -x, -y)
 	table.insert(boids, b)
+	boids_map[b.inst] = b
 end
 
 local freeze_radius = 0
@@ -91,6 +117,16 @@ local function update(frame)
 			-- print(v.inst, rvo2.agent_neighbors_num(v.inst))
 		else
 			v.arrived = true
+		end
+
+		if v.r_speed then
+			v.r = v.r + v.r_speed
+			if v.r >= v.r_target then
+				v.r = v.r_target
+				v.r_speed = nil
+			end
+			rvo2.radius(v.inst, v.r)
+			v.img:ps(v.x, v.y, v.r / v.r_target)
 		end
 
 		-- if v.core then
@@ -126,12 +162,39 @@ local function touch(x, y)
 	-- end
 	for k, v in ipairs(boids) do
 		if vector2.dist2(x, y, v.x, v.y) <= v.r2 then
-			-- bubble_pop(v.img, function()
-			-- 	rm_boid(v.inst)
-			-- end)
-			rvo2.velocity(v.inst, 0, 0)
-			rvo2.max_speed(v.inst)
-			rvo2.radius(v.inst, rvo2.radius(v.inst) * 2)
+			if #boids == 1 then
+				bubble_pop(v.img, function()
+					rm_boid(v.inst)
+				end)
+				return
+			end
+			local all, cnt = neighbors(v, true)
+			if cnt >= 3 then
+				local r = 0
+				for m, n in pairs(all) do
+					r = r + n.r2
+					bubble_pop(n.img, function()
+						rm_boid(n.inst)
+					end)
+				end
+
+				r = math.sqrt(r)
+				local b = add_boid(v.x, v.y, r, 0)
+				b.r_speed = r / 30
+				b.r_target = r
+				b.r = 0
+				rvo2.radius(v.inst, 0.01)
+				b.img:ps(v.x, v.y, 0)
+				rvo2.pre_velocity(b.inst, -x, -y)
+				table.insert(boids, b)
+				boids_map[b.inst] = b
+				-- bubble_pop(v.img, function()
+				-- 	rm_boid(v.inst)
+				-- end)
+			end
+			-- rvo2.velocity(v.inst, 0, 0)
+			-- rvo2.max_speed(v.inst)
+			-- rvo2.radius(v.inst, rvo2.radius(v.inst) * 2)
 			break
 		end
 	end

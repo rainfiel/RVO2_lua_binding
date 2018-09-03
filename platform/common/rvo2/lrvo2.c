@@ -254,6 +254,25 @@ _time_hori_obst(lua_State *L) {
 }
 
 static int
+_max_neighbors(lua_State *L) {
+	CHECK_SIM
+		
+	int n = lua_gettop(L);
+	int id = lua_tointeger(L, 1);
+	if (n==1) {
+		float ms = sim->getAgentMaxNeighbors(id);
+		lua_pushnumber(L, ms);
+		return 1;
+	} else if (n==2) {
+		float ms = lua_tonumber(L, 2);
+		sim->setAgentMaxNeighbors(id, ms);
+		return 0;
+	} else {
+		return luaL_error(L, "max_neighbors args count error");
+	}
+}
+
+static int
 _position(lua_State *L) {
 	CHECK_SIM
 		
@@ -318,6 +337,7 @@ extern "C" RVO2_API int luaopen_rvo2 (lua_State* L) {
 		{ "radius", _radius},
 		{ "time_hori", _time_hori},
 		{ "time_hori_obst", _time_hori_obst},
+		{ "max_neighbors", _max_neighbors},
 		{ NULL, NULL },
 	};
 	luaL_newlib(L,l);
