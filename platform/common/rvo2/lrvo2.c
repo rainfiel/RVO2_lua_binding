@@ -197,6 +197,63 @@ _max_speed(lua_State *L) {
 }
 
 static int
+_radius(lua_State *L) {
+	CHECK_SIM
+		
+	int n = lua_gettop(L);
+	int id = lua_tointeger(L, 1);
+	if (n==1) {
+		float ms = sim->getAgentRadius(id);
+		lua_pushnumber(L, ms);
+		return 1;
+	} else if (n==2) {
+		float ms = lua_tonumber(L, 2);
+		sim->setAgentRadius(id, ms);
+		return 0;
+	} else {
+		return luaL_error(L, "raduis args count error");
+	}
+}
+
+static int
+_time_hori(lua_State *L) {
+	CHECK_SIM
+		
+	int n = lua_gettop(L);
+	int id = lua_tointeger(L, 1);
+	if (n==1) {
+		float ms = sim->getAgentTimeHorizon(id);
+		lua_pushnumber(L, ms);
+		return 1;
+	} else if (n==2) {
+		float ms = lua_tonumber(L, 2);
+		sim->setAgentTimeHorizon(id, ms);
+		return 0;
+	} else {
+		return luaL_error(L, "time_hori args count error");
+	}
+}
+
+static int
+_time_hori_obst(lua_State *L) {
+	CHECK_SIM
+		
+	int n = lua_gettop(L);
+	int id = lua_tointeger(L, 1);
+	if (n==1) {
+		float ms = sim->getAgentTimeHorizonObst(id);
+		lua_pushnumber(L, ms);
+		return 1;
+	} else if (n==2) {
+		float ms = lua_tonumber(L, 2);
+		sim->setAgentTimeHorizonObst(id, ms);
+		return 0;
+	} else {
+		return luaL_error(L, "time_hori_obst args count error");
+	}
+}
+
+static int
 _position(lua_State *L) {
 	CHECK_SIM
 		
@@ -217,6 +274,28 @@ _position(lua_State *L) {
 	}
 }
 
+static int
+_agent_neighbors_num(lua_State *L) {
+	CHECK_SIM
+		
+	int id = lua_tointeger(L, 1);
+	size_t num = sim->getAgentNumAgentNeighbors(id);
+	lua_pushinteger(L, num);
+	return 1;
+}
+
+static int
+_get_agent_neighbor(lua_State *L) {
+	CHECK_SIM
+
+	int id = lua_tointeger(L, 1);
+	int idx = lua_tointeger(L, 2)-1;
+	
+	int nid = sim->getAgentAgentNeighbor(id, idx);
+	lua_pushinteger(L, nid);
+	return 1;
+}
+
 extern "C" RVO2_API int luaopen_rvo2 (lua_State* L) {
 	
 	luaL_Reg l[] = {
@@ -229,10 +308,16 @@ extern "C" RVO2_API int luaopen_rvo2 (lua_State* L) {
 		{ "process_obstacle", _process_obstacle},
 		{ "update", _update},
 
+		{ "agent_neighbors_num", _agent_neighbors_num },
+		{ "get_agent_neighbor", _get_agent_neighbor },
+
 		{ "pre_velocity", _pre_velocity},
 		{ "velocity", _velocity},
 		{ "max_speed", _max_speed},
 		{ "position", _position},
+		{ "radius", _radius},
+		{ "time_hori", _time_hori},
+		{ "time_hori_obst", _time_hori_obst},
 		{ NULL, NULL },
 	};
 	luaL_newlib(L,l);

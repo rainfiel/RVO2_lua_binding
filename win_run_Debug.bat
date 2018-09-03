@@ -1,1 +1,1 @@
-start D:\ejoy2dx\project\flock\platform\msvc\output\Debug\ej2dx.exe -d D:\ejoy2dx\project\flock\platform\msvc\output\Debug\..\..\..\..\ 
+start D:\ejoy2dx\project\RVO2_lua_binding\platform\msvc\output\Debug\rvo2.dll -d D:\ejoy2dx\project\RVO2_lua_binding\platform\msvc\output\Debug\..\..\..\..\ 

@@ -1,4 +1,7 @@
-platform/msvc/build/
 platform/msvc/lib/
 platform/msvc/obj/
 platform/msvc/output/
+*.sdf
+*.suo
+*.psess
+*.vspx

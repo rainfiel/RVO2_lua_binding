@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\rvo2\Agent.cpp" />
+    <ClCompile Include="..\..\..\common\rvo2\KdTree.cpp" />
+    <ClCompile Include="..\..\..\common\rvo2\lrvo2.c" />
+    <ClCompile Include="..\..\..\common\rvo2\Obstacle.cpp" />
+    <ClCompile Include="..\..\..\common\rvo2\RVOSimulator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\common\rvo2\Agent.h" />
+    <ClInclude Include="..\..\..\common\rvo2\Definitions.h" />
+    <ClInclude Include="..\..\..\common\rvo2\KdTree.h" />
+    <ClInclude Include="..\..\..\common\rvo2\Obstacle.h" />
+    <ClInclude Include="..\..\..\common\rvo2\RVO.h" />
+    <ClInclude Include="..\..\..\common\rvo2\RVOSimulator.h" />
+    <ClInclude Include="..\..\..\common\rvo2\Vector2.h" />
+  </ItemGroup>
+</Project>
