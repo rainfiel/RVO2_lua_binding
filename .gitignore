@@ -5,3 +5,4 @@ platform/msvc/output/
 *.suo
 *.psess
 *.vspx
+*.opensdf

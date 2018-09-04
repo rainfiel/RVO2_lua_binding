@@ -10,12 +10,18 @@ local neighbor_tor = 1
 
 local boid_render = render:create(1002, "boid")
 
+local bubble_res = {
+	{Path = [[BubbleAnimation_Transparent_6x5.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{Path = [[bubble_pop_1.png]], Size=374,TextureAnimation={frameWidth=512,frameHeight=512,startFrame=0,endFrame=5,numLoops=1}},
+}
+
 local animation = require "animation"
 local function new_bubble(t, r)
-	local scale = r*2/374
+	local cfg = bubble_res[t or 1]
+	local scale = r*2/cfg.Size
 	local mat = {1024*scale, 0, 0, 1024*scale, 0, 0}
-	local ani = animation.new(t or "bubble_pop_1.png", string.format("b_%d", r//1), 
-		{TextureAnimation={frameWidth=512,frameHeight=512,startFrame=0,endFrame=5,numLoops=1}},
+	local ani = animation.new(cfg.Path, string.format("b_%d", r//1), 
+		cfg,
 		{frame_mat=mat})
 	return ani.img
 end
@@ -101,6 +107,7 @@ local function update(frame)
 	rvo2.update()
 
 	for k, v in ipairs(boids) do
+		v.img.frame = v.img.frame + 1
 		local x, y = rvo2.position(v.inst)
 		local r2 = vector2.dist2(x, y, v.x, v.y)
 		if x ~= v.x or y ~= v.y then
