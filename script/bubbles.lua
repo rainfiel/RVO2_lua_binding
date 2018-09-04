@@ -11,31 +11,50 @@ local neighbor_tor = 1
 local boid_render = render:create(1002, "boid")
 
 local bubble_res = {
-	{Path = [[BubbleAnimation_Transparent_6x5.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{PopAni=2, Path = [[BubbleAnimation_04.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{Path = [[BubbleExplosion2.png]], Size=400,TextureAnimation={frameWidth=400,frameHeight=400,startFrame=0,endFrame=11,numLoops=1}},
+	
+	{PopAni=4, Path = [[BubbleAnimation_02.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{Path = [[BubbleExplosion.png]], Size=400,TextureAnimation={frameWidth=400,frameHeight=400,startFrame=0,endFrame=11,numLoops=1}},
+
+	{PopAni=6, Path = [[BubbleAnimation_03.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{Path = [[BubbleExplosion.png]], Size=400,TextureAnimation={frameWidth=400,frameHeight=400,startFrame=0,endFrame=11,numLoops=1}},
+
+	{PopAni=8, Path = [[BubbleAnimation_Transparent_6x5.png]], Size=200,TextureAnimation={frameWidth=200,frameHeight=200,startFrame=0,endFrame=29,numLoops=1}},
+	{Path = [[BubbleExplosion2.png]], Size=400,TextureAnimation={frameWidth=400,frameHeight=400,startFrame=0,endFrame=11,numLoops=1}},
+
 	{Path = [[bubble_pop_1.png]], Size=374,TextureAnimation={frameWidth=512,frameHeight=512,startFrame=0,endFrame=5,numLoops=1}},
 }
 
 local animation = require "animation"
 local function new_bubble(t, r)
-	local cfg = bubble_res[t or 1]
+	local cfg = bubble_res[t or 7]
 	local scale = r*2/cfg.Size
 	local mat = {1024*scale, 0, 0, 1024*scale, 0, 0}
 	local ani = animation.new(cfg.Path, string.format("b_%d", r//1), 
 		cfg,
 		{frame_mat=mat})
-	return ani.img
+	return ani.img, cfg
 end
 
-local function bubble_pop(img, cb)
-	img.usr_data.render.frame_delta = 0.8
+local function bubble_pop(b, cb)
+	boid_render:hide(b.img)
+	local img, cfg = new_bubble(b.cfg.PopAni, b.r)
+	boid_render:show(img, 0, render.center)
+	img:ps(b.x, b.y)
+	-- img.color = b.img.color
+	-- img.usr_data.render.frame_delta = math.random()
 	img.usr_data.render.ani_playonce = "hide_after_play"
 	img.usr_data.render.ani_playonce_callback = cb
+	b.img = img
 end
 
 local boids = {}
 local boids_map = {}
 local obstacles = {}
 local colors = {0xAAFF0000, 0xAA00FF00, 0xAA0000FF}
+-- local types = {3, 5, 7}
+local types = {1, 1, 1}
 local function add_boid(x, y, r, type)
 	local inst = rvo2.add_agent(x, y)
 	rvo2.radius(inst, r)
@@ -45,17 +64,24 @@ local function add_boid(x, y, r, type)
 		rvo2.time_hori_obst(inst, r/50000)
 	end
 	-- rvo2.time_hori_obst(inst, 5)
-	local img = new_bubble(nil, r)
+
+	local img, cfg = new_bubble(types[type], r)
 	img:ps(x, y)
 	img.color = colors[type] or 0xFFFFFFFF
 	boid_render:show(img, 0, render.center)
-	return {type=type,inst=inst,x=x,y=y,r=r,r2=r*r,img=img}
+	return {type=type,inst=inst,x=x,y=y,r=r,r2=r*r,img=img,cfg=cfg}
 end
 
 local function rm_boid(inst)
 	rvo2.position(inst, -9999-inst*100, -9999-inst*100)
 	rvo2.max_speed(inst, 0)
 	boids_map[inst] = nil
+	for k, v in ipairs(boids) do
+		if v.inst == inst then
+			table.remove(boids, k)
+			break
+		end
+	end
 end
 
 local function neighbors(boid, check_type, all, cnt)
@@ -92,22 +118,25 @@ end
 -- add_obstacle(0, 1.732,  2, -1.732, -2, -1.732)
 -- rvo2.process_obstacle()
 
+local max_r = 0
 for k=1, 250 do
 	local x = math.random(-255, 250)
 	local y = math.random(-255, 255)
 	local r = math.random(5, 10)
+	max_r = r * r + max_r
 	local b = add_boid(x, y, r, #boids%3+1)
 	rvo2.pre_velocity(b.inst, -x, -y)
 	table.insert(boids, b)
 	boids_map[b.inst] = b
 end
 
+print("max_r:", math.sqrt(max_r))
+
 local freeze_radius = 0
 local function update(frame)
 	rvo2.update()
 
 	for k, v in ipairs(boids) do
-		v.img.frame = v.img.frame + 1
 		local x, y = rvo2.position(v.inst)
 		local r2 = vector2.dist2(x, y, v.x, v.y)
 		if x ~= v.x or y ~= v.y then
@@ -131,6 +160,7 @@ local function update(frame)
 			if v.r >= v.r_target then
 				v.r = v.r_target
 				v.r_speed = nil
+				v.img.usr_data.render.ani_playonce = true
 			end
 			rvo2.radius(v.inst, v.r)
 			v.img:ps(v.x, v.y, v.r / v.r_target)
@@ -170,9 +200,10 @@ local function touch(x, y)
 	for k, v in ipairs(boids) do
 		if vector2.dist2(x, y, v.x, v.y) <= v.r2 then
 			if #boids == 1 then
-				bubble_pop(v.img, function()
+				bubble_pop(v, function()
 					rm_boid(v.inst)
 				end)
+				print("........radius:", v.r)
 				return
 			end
 			local all, cnt = neighbors(v, true)
@@ -180,7 +211,7 @@ local function touch(x, y)
 				local r = 0
 				for m, n in pairs(all) do
 					r = r + n.r2
-					bubble_pop(n.img, function()
+					bubble_pop(n, function()
 						rm_boid(n.inst)
 					end)
 				end
@@ -195,9 +226,6 @@ local function touch(x, y)
 				rvo2.pre_velocity(b.inst, -x, -y)
 				table.insert(boids, b)
 				boids_map[b.inst] = b
-				-- bubble_pop(v.img, function()
-				-- 	rm_boid(v.inst)
-				-- end)
 			end
 			-- rvo2.velocity(v.inst, 0, 0)
 			-- rvo2.max_speed(v.inst)
