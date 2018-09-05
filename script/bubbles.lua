@@ -38,12 +38,13 @@ local function new_bubble(t, r)
 end
 
 local function bubble_pop(b, cb)
+	b.poped = true
 	boid_render:hide(b.img)
 	local img, cfg = new_bubble(b.cfg.PopAni, b.r)
 	boid_render:show(img, 0, render.center)
 	img:ps(b.x, b.y)
 	-- img.color = b.img.color
-	-- img.usr_data.render.frame_delta = math.random()
+	img.usr_data.render.frame_delta = 0.6
 	img.usr_data.render.ani_playonce = "hide_after_play"
 	img.usr_data.render.ani_playonce_callback = cb
 	b.img = img
@@ -84,9 +85,9 @@ local function rm_boid(inst)
 	end
 end
 
-local function neighbors(boid, check_type, all, cnt)
+local function neighbors(boid, check_type, all, list)
 	all = all or {}
-	cnt = cnt or 0
+	list = list or {}
 	local num = rvo2.agent_neighbors_num(boid.inst)
 	for k=1, num do
 		local n = rvo2.get_agent_neighbor(boid.inst, k)
@@ -94,12 +95,12 @@ local function neighbors(boid, check_type, all, cnt)
 		if not all[n] and (not check_type or nb.type == boid.type) then
 			if math.abs(vector2.dist(nb.x, nb.y, boid.x, boid.y) - nb.r - boid.r) <= neighbor_tor then
 				all[n] = nb
-				cnt = cnt + 1
-				all, cnt = neighbors(nb, check_type, all, cnt)
+				table.insert(list, nb)
+				neighbors(nb, check_type, all, list)
 			end
 		end
 	end
-	return all, cnt
+	return list
 end
 
 local function add_obstacle(...)
@@ -122,7 +123,7 @@ local max_r = 0
 for k=1, 250 do
 	local x = math.random(-255, 250)
 	local y = math.random(-255, 255)
-	local r = math.random(5, 10)
+	local r = math.random(10, 15)
 	max_r = r * r + max_r
 	local b = add_boid(x, y, r, #boids%3+1)
 	rvo2.pre_velocity(b.inst, -x, -y)
@@ -198,7 +199,7 @@ local function touch(x, y)
 	-- 	rvo2.pre_velocity(v.inst, x-v.x, y-v.y)
 	-- end
 	for k, v in ipairs(boids) do
-		if vector2.dist2(x, y, v.x, v.y) <= v.r2 then
+		if not v.poped and vector2.dist2(x, y, v.x, v.y) <= v.r2 then
 			if #boids == 1 then
 				bubble_pop(v, function()
 					rm_boid(v.inst)
@@ -206,10 +207,10 @@ local function touch(x, y)
 				print("........radius:", v.r)
 				return
 			end
-			local all, cnt = neighbors(v, true)
-			if cnt >= 3 then
+			local all = neighbors(v, true)
+			if #all >= 3 then
 				local r = 0
-				for m, n in pairs(all) do
+				for m, n in ipairs(all) do
 					r = r + n.r2
 					bubble_pop(n, function()
 						rm_boid(n.inst)

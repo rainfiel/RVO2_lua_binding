@@ -8,7 +8,7 @@ local render = require "ejoy2dx.render"
 local border = require "border"
 -- local world = require "world"
 
-render:fixed_adapter(500, 500)
+render:fixed_adapter(800, 600)
 -- local rvo_world = require "rvo_world"
 
 local ani_play = require "ejoy2dx.animation"
