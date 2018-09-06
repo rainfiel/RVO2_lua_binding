@@ -458,7 +458,7 @@ Mouse(int button, int state, int mouseX, int mouseY)
 	if (state == GLUT_DOWN) {
 		GetOGLPos(mouseX, mouseY, &clickPos);
 		AddPrey(clickPos.x, clickPos.y);
-		//printf("Mouse position: x:%f,y:%f\n", MousePos[0].x, MousePos[0].y);
+	//	printf("Mouse position: x:%f,y:%f\n", MousePos.x, MousePos.y);
 		
 		hit = DoSelect((GLint) mouseX, (GLint) mouseY);
 		if (hit != -1) {

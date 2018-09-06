@@ -8,6 +8,10 @@ rvo2.time_step(1/30)
 rvo2.default_agent(1000, 10, 0.1, 0.1, 10, 18)
 local neighbor_tor = 1
 
+local anchor = {}
+for k, v in pairs(render:anchor(render.center)) do
+	anchor[k] = v
+end
 local boid_render = render:create(1002, "boid")
 
 local bubble_res = {
@@ -41,7 +45,7 @@ local function bubble_pop(b, cb)
 	b.poped = true
 	boid_render:hide(b.img)
 	local img, cfg = new_bubble(b.cfg.PopAni, b.r)
-	boid_render:show(img, 0, render.center)
+	boid_render:show(img, 0, anchor)
 	img:ps(b.x, b.y)
 	-- img.color = b.img.color
 	img.usr_data.render.frame_delta = 0.6
@@ -69,7 +73,7 @@ local function add_boid(x, y, r, type)
 	local img, cfg = new_bubble(types[type], r)
 	img:ps(x, y)
 	img.color = colors[type] or 0xFFFFFFFF
-	boid_render:show(img, 0, render.center)
+	boid_render:show(img, 0, anchor)
 	return {type=type,inst=inst,x=x,y=y,r=r,r2=r*r,img=img,cfg=cfg}
 end
 
@@ -197,7 +201,7 @@ local function draw()
 end
 
 local function touch(x, y)
-	x, y = render:screen_to_world(render:anchor(render.center), x, y)
+	x, y = render:screen_to_world(anchor, x, y)
 	-- for k, v in ipairs(boids) do
 	-- 	rvo2.pre_velocity(v.inst, x-v.x, y-v.y)
 	-- end
@@ -239,8 +243,26 @@ local function touch(x, y)
 	end
 end
 
+function gesture(what,x1,y1,x2,y2,state)
+	print("gesture:", what, state, x1, y1, x2, y2)
+	if what == "PINCH" then
+		local sx, sy = render:screen_to_world(anchor, x1, y1)
+		local scale = anchor.scale * x2
+		scale = math.min(2, scale)
+		scale = math.max(1, scale)
+		anchor.scale = scale
+		local wx, wy = render:world_to_screen(anchor, sx, sy)
+		anchor.x = anchor.x + x1 - wx
+		anchor.y = anchor.y + y1 - wy
+	elseif what == "PAN" then
+		anchor.x = anchor.x + x1
+		anchor.y = anchor.y + y1
+	end
+end
+
 return {
 	update = update,
 	draw = draw,
-	touch = touch
+	touch = touch,
+	gesture = gesture
 }

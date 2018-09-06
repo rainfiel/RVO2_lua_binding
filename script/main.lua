@@ -56,9 +56,9 @@ function game.touch(what, x, y)
 	if what == "END" then
 		-- world.touch(x, y)
 		-- rvo_world.touch(x, y)
-		bubbles.touch(x, y)
+		return bubbles.touch(x, y)
 	end
-	return true
+	return false
 end
 
 function game.message(...)
@@ -74,7 +74,8 @@ end
 function game.on_pause()
 end
 
-function game.gesture()
+function game.gesture(...)
+	bubbles.gesture(...)
 end
 
 ej.start(game)
