@@ -224,7 +224,7 @@ getStateCode(UIGestureRecognizerState state) {
 - (void) handlePinch:(UIPinchGestureRecognizer *) gr {
 	int state = getStateCode(gr.state);
 	CGPoint p = [gr locationInView:self.view];
-	ejoy2d_fw_gesture(3, p.x, p.y, (gr.scale * 1024.0), 0.0, state);
+	ejoy2d_fw_gesture(3, p.x, p.y, gr.scale, 0.0, state);
 	gr.scale = 1;
 }
 

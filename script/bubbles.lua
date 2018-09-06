@@ -12,6 +12,7 @@ local anchor = {}
 for k, v in pairs(render:anchor(render.center)) do
 	anchor[k] = v
 end
+local min_scale = anchor.scale
 local boid_render = render:create(1002, "boid")
 
 local bubble_res = {
@@ -244,12 +245,12 @@ local function touch(x, y)
 end
 
 function gesture(what,x1,y1,x2,y2,state)
-	print("gesture:", what, state, x1, y1, x2, y2)
+	print("gesture:", what, state, x1, y1, x2, y2, anchor.scale)
 	if what == "PINCH" then
 		local sx, sy = render:screen_to_world(anchor, x1, y1)
 		local scale = anchor.scale * x2
 		scale = math.min(2, scale)
-		scale = math.max(1, scale)
+		scale = math.max(min_scale, scale)
 		anchor.scale = scale
 		local wx, wy = render:world_to_screen(anchor, sx, sy)
 		anchor.x = anchor.x + x1 - wx
@@ -257,6 +258,8 @@ function gesture(what,x1,y1,x2,y2,state)
 	elseif what == "PAN" then
 		anchor.x = anchor.x + x1
 		anchor.y = anchor.y + y1
+	elseif what == "TAP" then
+		touch(x1, y1)
 	end
 end
 

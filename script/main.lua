@@ -53,11 +53,11 @@ function game.drawframe()
 end
 
 function game.touch(what, x, y)
-	if what == "END" then
-		-- world.touch(x, y)
-		-- rvo_world.touch(x, y)
-		return bubbles.touch(x, y)
-	end
+	-- if what == "BEGIN" then
+	-- 	-- world.touch(x, y)
+	-- 	-- rvo_world.touch(x, y)
+	-- 	return bubbles.touch(x, y)
+	-- end
 	return false
 end
 
