@@ -86,8 +86,11 @@ local function rm_boid(inst)
 end
 
 local function neighbors(boid, check_type, all, list)
-	all = all or {}
-	list = list or {}
+	if not all then
+		all = {}
+		all[boid.inst] = boid
+		list = {boid}
+	end
 	local num = rvo2.agent_neighbors_num(boid.inst)
 	for k=1, num do
 		local n = rvo2.get_agent_neighbor(boid.inst, k)
