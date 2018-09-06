@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ejoy2dx", "..\..\..\..\..\p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rvo2", "rvo2\rvo2.vcxproj", "{399A4C80-AD81-11E8-ABE3-D45471D4B533}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boids", "boids\boids.vcxproj", "{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -58,6 +60,12 @@ Global
 		{399A4C80-AD81-11E8-ABE3-D45471D4B533}.Release|Win32.ActiveCfg = Release|Win32
 		{399A4C80-AD81-11E8-ABE3-D45471D4B533}.Release|Win32.Build.0 = Release|Win32
 		{399A4C80-AD81-11E8-ABE3-D45471D4B533}.Release|x64.ActiveCfg = Release|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Debug|Win32.Build.0 = Debug|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Debug|x64.ActiveCfg = Debug|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Release|Win32.ActiveCfg = Release|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Release|Win32.Build.0 = Release|Win32
+		{6C8F71BB-A1F1-4CD2-9432-FFA6F9CA082D}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
